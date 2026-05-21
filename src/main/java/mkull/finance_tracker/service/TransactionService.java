@@ -3,6 +3,7 @@ package mkull.finance_tracker.service;
 import lombok.RequiredArgsConstructor;
 import mkull.finance_tracker.dto.TransactionRequest;
 import mkull.finance_tracker.dto.TransactionResponse;
+import mkull.finance_tracker.exception.TransactionNotFoundException;
 import mkull.finance_tracker.model.Transaction;
 import mkull.finance_tracker.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class TransactionService {
 
     public TransactionResponse findById(Long id) {
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono transakcji o id: " + id));
+                .orElseThrow(() -> new TransactionNotFoundException(id));
         return toResponse(transaction);
     }
 
