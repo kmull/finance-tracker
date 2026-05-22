@@ -1,4 +1,4 @@
-package mkull.finance_tracker.exception;
+package kmull.finance_tracker.exception;
 
 public class TransactionNotFoundException extends RuntimeException {
 

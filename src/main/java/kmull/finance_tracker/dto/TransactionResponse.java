@@ -1,4 +1,4 @@
-package mkull.finance_tracker.dto;
+package kmull.finance_tracker.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

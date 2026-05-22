@@ -1,4 +1,4 @@
-package mkull.finance_tracker.dto;
+package kmull.finance_tracker.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

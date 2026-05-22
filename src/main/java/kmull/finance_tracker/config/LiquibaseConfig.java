@@ -1,4 +1,4 @@
-package mkull.finance_tracker.config;
+package kmull.finance_tracker.config;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.context.annotation.Bean;

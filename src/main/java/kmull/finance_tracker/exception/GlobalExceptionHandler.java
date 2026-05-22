@@ -1,4 +1,4 @@
-package mkull.finance_tracker.exception;
+package kmull.finance_tracker.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package mkull.finance_tracker.model;
+package kmull.finance_tracker.model;
 
 import jakarta.persistence.*;
 import lombok.*;
