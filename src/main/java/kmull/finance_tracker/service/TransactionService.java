@@ -45,6 +45,20 @@ public class TransactionService {
         transactionRepository.deleteById(id);
     }
 
+    public TransactionResponse update(Long id, TransactionRequest request) {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new TransactionNotFoundException(id));
+
+        transaction.setAmount(request.amount());
+        transaction.setCategory(request.category());
+        transaction.setDescription(request.description());
+        transaction.setDate(request.date());
+
+        Transaction saved = transactionRepository.save(transaction);
+        return toResponse(saved);
+
+    }
+
     private TransactionResponse toResponse(Transaction t) {
         return new TransactionResponse(
                 t.getId(),
