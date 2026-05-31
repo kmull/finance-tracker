@@ -26,8 +26,9 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionResponse>> findAll() {
-        return ResponseEntity.ok(transactionService.findAll());
+    public ResponseEntity<List<TransactionResponse>> findAll(
+            @RequestParam(required = false) String sortBy) {
+        return ResponseEntity.ok(transactionService.findAll(sortBy));
     }
 
     @GetMapping("/{id}")

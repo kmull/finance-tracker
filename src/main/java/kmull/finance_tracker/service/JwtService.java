@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-    private static final String SECRET = "finance-tracker-secret-key-minimum-256-bits!!";
+    private static final String SECRET = "finance-tracker-super-secret-key-for-jwt-minimum-bits-ok-now!!";
     private static final long EXPIRATION = 1000 * 60 * 60 * 24; // 24h
 
     private SecretKey getKey() {
@@ -22,7 +22,7 @@ public class JwtService {
                 .subject(email)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(getKey())
+                .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
     }
 

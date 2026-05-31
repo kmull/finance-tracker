@@ -1,5 +1,6 @@
 package kmull.finance_tracker.service;
 
+import kmull.finance_tracker.strategy.TransactionSortStrategy;
 import lombok.RequiredArgsConstructor;
 import kmull.finance_tracker.dto.TransactionRequest;
 import kmull.finance_tracker.dto.TransactionResponse;
@@ -9,12 +10,14 @@ import kmull.finance_tracker.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final Map<String, TransactionSortStrategy> sortStrategies;
 
     public TransactionResponse create(TransactionRequest request) {
         Transaction transaction = Transaction.builder()
@@ -28,12 +31,12 @@ public class TransactionService {
         return toResponse(saved);
     }
 
-    public List<TransactionResponse> findAll() {
-        return transactionRepository.findAll()
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
+//    public List<TransactionResponse> findAll(String sortBy) {
+//        return transactionRepository.findAll()
+//                .stream()
+//                .map(this::toResponse)
+//                .toList();
+//    }
 
     public TransactionResponse findById(Long id) {
         Transaction transaction = transactionRepository.findById(id)
@@ -56,7 +59,17 @@ public class TransactionService {
 
         Transaction saved = transactionRepository.save(transaction);
         return toResponse(saved);
+    }
 
+    public List<TransactionResponse> findAll(String sortBy) {
+        List<Transaction> transactions = transactionRepository.findAll();
+
+        TransactionSortStrategy strategy = sortStrategies.get(sortBy);
+        List<Transaction> sorted = strategy != null ? strategy.sort(transactions) : transactions;
+
+        return sorted.stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     private TransactionResponse toResponse(Transaction t) {
