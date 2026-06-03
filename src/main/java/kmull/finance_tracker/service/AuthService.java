@@ -6,6 +6,7 @@ import kmull.finance_tracker.exception.InvalidCredentialsException;
 import kmull.finance_tracker.model.User;
 import kmull.finance_tracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,14 @@ public class AuthService {
         String token = jwtService.generatToken(user.getEmail());
         return new AuthResponse(token);
 
+    }
+
+    public User getCurrentUser() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(InvalidCredentialsException::new);
     }
 
 }

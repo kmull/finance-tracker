@@ -23,12 +23,15 @@ public class Transaction {
     private BigDecimal amount;
 
     @Column(nullable = false)
-    private  String category;
+    private String category;
 
     private String description;
 
     @Column(nullable = false)
     private LocalDate date;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

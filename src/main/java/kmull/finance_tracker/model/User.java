@@ -3,6 +3,8 @@ package kmull.finance_tracker.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -24,4 +26,8 @@ public class User {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Transaction> transactions;
+
 }

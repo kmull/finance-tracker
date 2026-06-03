@@ -1,5 +1,8 @@
 package kmull.finance_tracker.service;
 
+import jakarta.transaction.Transactional;
+import kmull.finance_tracker.aspect.ValidateTransaction;
+import kmull.finance_tracker.model.User;
 import kmull.finance_tracker.strategy.TransactionSortStrategy;
 import lombok.RequiredArgsConstructor;
 import kmull.finance_tracker.dto.TransactionRequest;
@@ -18,25 +21,24 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final Map<String, TransactionSortStrategy> sortStrategies;
+    private final AuthService authService;
 
+    @Transactional
+    @ValidateTransaction
     public TransactionResponse create(TransactionRequest request) {
+        User user = authService.getCurrentUser();
+
         Transaction transaction = Transaction.builder()
                 .amount(request.amount())
                 .category(request.category())
                 .description(request.description())
                 .date(request.date())
+                .user(user)
                 .build();
 
         Transaction saved = transactionRepository.save(transaction);
         return toResponse(saved);
     }
-
-//    public List<TransactionResponse> findAll(String sortBy) {
-//        return transactionRepository.findAll()
-//                .stream()
-//                .map(this::toResponse)
-//                .toList();
-//    }
 
     public TransactionResponse findById(Long id) {
         Transaction transaction = transactionRepository.findById(id)
@@ -44,10 +46,13 @@ public class TransactionService {
         return toResponse(transaction);
     }
 
+    @Transactional
     public void delete(Long id) {
         transactionRepository.deleteById(id);
     }
 
+    @Transactional
+    @ValidateTransaction
     public TransactionResponse update(Long id, TransactionRequest request) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new TransactionNotFoundException(id));
@@ -62,7 +67,9 @@ public class TransactionService {
     }
 
     public List<TransactionResponse> findAll(String sortBy) {
-        List<Transaction> transactions = transactionRepository.findAll();
+        User user = authService.getCurrentUser();
+        List<Transaction> transactions = transactionRepository.findByUser(user);
+
 
         TransactionSortStrategy strategy = sortStrategies.get(sortBy);
         List<Transaction> sorted = strategy != null ? strategy.sort(transactions) : transactions;
