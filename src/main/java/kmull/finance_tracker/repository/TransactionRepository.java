@@ -3,6 +3,7 @@ package kmull.finance_tracker.repository;
 import kmull.finance_tracker.model.Transaction;
 import kmull.finance_tracker.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -25,6 +26,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query(BASE_QUERY + "AND t.category = :category")
     List<Transaction> findByUserAndCategory(@Param("user") User user,
                                             @Param("category") String category);
-    @Query(BASE_QUERY + "JOIN FETCH t.user WHERE t.user = :user")
+    @Query(BASE + "JOIN FETCH t.user WHERE t.user = :user")
     List<Transaction> findByUserWithUser(@Param("user") User user);
+
+    long deleteTransactionById(Long id);
 }
