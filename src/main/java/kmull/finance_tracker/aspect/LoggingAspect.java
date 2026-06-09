@@ -28,7 +28,7 @@ public class LoggingAspect {
     // Before — loguj przed wywołaniem metody
     @Before("serviceMethods()")
     public void logBefore(JoinPoint joinPoint) {
-        log.info("- Wywołanie: {}.{}() | argumenty: {}",
+         log.info("- Wywołanie: {}.{}() | argumenty: {}",
                 joinPoint.getTarget().getClass().getSimpleName(),
                 joinPoint.getSignature().getName(),
                 Arrays.toString(joinPoint.getArgs()));

@@ -2,6 +2,7 @@ package kmull.finance_tracker.service;
 
 import jakarta.transaction.Transactional;
 import kmull.finance_tracker.aspect.ValidateTransaction;
+import kmull.finance_tracker.mapper.TransactionMapper;
 import kmull.finance_tracker.model.User;
 import kmull.finance_tracker.strategy.TransactionSortStrategy;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import kmull.finance_tracker.dto.TransactionResponse;
 import kmull.finance_tracker.exception.TransactionNotFoundException;
 import kmull.finance_tracker.model.Transaction;
 import kmull.finance_tracker.repository.TransactionRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final Map<String, TransactionSortStrategy> sortStrategies;
     private final AuthService authService;
+    private final TransactionMapper transactionMapper;
 
     @Transactional
     @ValidateTransaction
@@ -40,6 +44,7 @@ public class TransactionService {
         return toResponse(saved);
     }
 
+    @Cacheable(value = "transactions", key = "#id")
     public TransactionResponse findById(Long id) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new TransactionNotFoundException(id));
@@ -47,6 +52,7 @@ public class TransactionService {
     }
 
     @Transactional
+    @CacheEvict(value = "transactions", key = "#id")
     public void delete(Long id) {
 //        transactionRepository.deleteById(id);
         long deleted = transactionRepository.deleteTransactionById(id);
@@ -57,6 +63,7 @@ public class TransactionService {
 
     @Transactional
     @ValidateTransaction
+    @CacheEvict(value = "transactions", key = "#id")
     public TransactionResponse update(Long id, TransactionRequest request) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new TransactionNotFoundException(id));
@@ -83,13 +90,7 @@ public class TransactionService {
                 .toList();
     }
 
-    private TransactionResponse toResponse(Transaction t) {
-        return new TransactionResponse(
-                t.getId(),
-                t.getAmount(),
-                t.getCategory(),
-                t.getDescription(),
-                t.getDate()
-        );
+    private TransactionResponse toResponse(Transaction transaction) {
+        return transactionMapper.toResponse(transaction);
     }
 }
