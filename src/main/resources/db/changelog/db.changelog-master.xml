@@ -8,4 +8,5 @@
     <include file="classpath:db/changelog/changes/001-create-transactions-table.xml"/>
     <include file="classpath:db/changelog/changes/002-create-users-table.xml"/>
     <include file="classpath:db/changelog/changes/003-add-user-id-to-transactions.xml"/>
+    <include file="classpath:db/changelog/004-create-budgets-table.xml"/>
 </databaseChangeLog>

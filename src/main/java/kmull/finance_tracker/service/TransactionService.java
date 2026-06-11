@@ -77,6 +77,7 @@ public class TransactionService {
         return toResponse(saved);
     }
 
+    @Transactional
     public List<TransactionResponse> findAll(String sortBy) {
         User user = authService.getCurrentUser();
         List<Transaction> transactions = transactionRepository.findByUser(user);

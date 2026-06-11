@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private ResponseEntity<ErrorResponse> body;
+
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCredentials(InvalidCredentialsException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -32,6 +34,11 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(BudgetNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBudgetNotFound(BudgetNotFoundException ex) {
+        return body;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
