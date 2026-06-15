@@ -22,7 +22,7 @@ public class Budget {
     @Column(nullable = false)
     private String category;
 
-    @Column(nullable = false)
+    @Column(name = "budget_limit", nullable = false)
     private BigDecimal limit;
 
     @Column(nullable = false)
